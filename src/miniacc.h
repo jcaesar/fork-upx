@@ -4881,7 +4881,7 @@ typedef unsigned short wchar_t;
 #elif (ACC_LIBC_FREESTANDING)
 #elif (ACC_LIBC_MOSTLY_FREESTANDING)
 #  if (HAVE_SETJMP_H)
-#    include <setjmp.h>
+//#    include <setjmp.h>
 #  endif
 #else
 #if (HAVE_STDARG_H)
@@ -4906,7 +4906,7 @@ typedef unsigned short wchar_t;
 #  include <dirent.h>
 #endif
 #if (HAVE_SETJMP_H)
-#  include <setjmp.h>
+//#  include <setjmp.h>
 #endif
 #if (HAVE_SIGNAL_H)
 #  include <signal.h>
