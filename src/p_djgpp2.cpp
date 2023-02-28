@@ -109,7 +109,7 @@ static bool is_dlm(InputFile *fi, unsigned coff_offset) {
     byte buf[4];
     unsigned off;
 
-    try {
+    UPX_TRY {
         fi->seek(coff_offset, SEEK_SET);
         fi->readx(buf, 4);
         off = get_le32(buf);
@@ -119,7 +119,7 @@ static bool is_dlm(InputFile *fi, unsigned coff_offset) {
         fi->readx(buf, 4);
         if (memcmp(buf, "DLMF", 4) == 0)
             return true;
-    } catch (const IOException &) {
+    } UPX_CATCH (const IOException &) {
     }
     return false;
 }
@@ -128,7 +128,7 @@ static void handle_allegropak(InputFile *fi, OutputFile *fo) {
     byte b[8];
     int pfsize = 0;
 
-    try {
+    UPX_TRY {
         fi->seek(-8, SEEK_END);
         fi->readx(b, 8);
         if (memcmp(b, "slh+", 4) != 0)
@@ -137,7 +137,7 @@ static void handle_allegropak(InputFile *fi, OutputFile *fo) {
         if (pfsize <= 8 || pfsize >= fi->st.st_size)
             return;
         fi->seek(-pfsize, SEEK_END);
-    } catch (const IOException &) {
+    } UPX_CATCH (const IOException &) {
         return;
     }
     MemBuffer buf(0x4000);

@@ -87,7 +87,7 @@ static Packer *try_pack(Packer *p, void *user) {
         return nullptr;
     InputFile *f = (InputFile *) user;
     p->assertPacker();
-    try {
+    UPX_TRY {
         p->initPackHeader();
         f->seek(0, SEEK_SET);
         if (p->canPack()) {
@@ -96,10 +96,10 @@ static Packer *try_pack(Packer *p, void *user) {
             f->seek(0, SEEK_SET);
             return p;
         }
-    } catch (const IOException &) {
-    } catch (...) {
+    } UPX_CATCH (const IOException &) {
+    } UPX_CATCH (...) {
         delete p;
-        throw;
+        UPX_RETHROW;
     }
     delete p;
     return nullptr;
@@ -110,7 +110,7 @@ static Packer *try_unpack(Packer *p, void *user) {
         return nullptr;
     InputFile *f = (InputFile *) user;
     p->assertPacker();
-    try {
+    UPX_TRY {
         p->initPackHeader();
         f->seek(0, SEEK_SET);
         int r = p->canUnpack();
@@ -122,10 +122,10 @@ static Packer *try_unpack(Packer *p, void *user) {
             // FIXME - could stop testing all other unpackers at this time
             // see canUnpack() in packer.h
         }
-    } catch (const IOException &) {
-    } catch (...) {
+    } UPX_CATCH (const IOException &) {
+    } UPX_CATCH (...) {
         delete p;
-        throw;
+        UPX_RETHROW;
     }
     delete p;
     return nullptr;

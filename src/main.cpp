@@ -64,8 +64,18 @@ static void handle_opterr(acc_getopt_p g, const char *f, void *v) {
 
 static int exit_code = EXIT_OK;
 
+#ifdef UPX_NOEXCEPTION
+int throw_exit(int code) {
+    std::exit(code);
+}
+#else
+int throw_exit(int code) {
+    UPX_THROW(code);
+}
+#endif
+
 #if (WITH_GUI)
-__acc_static_noinline void do_exit(void) { throw exit_code; }
+__acc_static_noinline void do_exit(void) { UPX_THROW(exit_code); }
 #else
 #if defined(__GNUC__)
 static void do_exit(void) __attribute__((__noreturn__));
@@ -107,14 +117,14 @@ bool main_set_exit_code(int ec) { return set_eec(ec, &exit_code); }
 
 __acc_static_noinline void e_exit(int ec) {
     if (opt->debug.getopt_throw_instead_of_exit)
-        throw ec;
+        throw_exit(ec);
     (void) main_set_exit_code(ec);
     do_exit();
 }
 
 __acc_static_noinline void e_usage(void) {
     if (opt->debug.getopt_throw_instead_of_exit)
-        throw EXIT_USAGE;
+        throw_exit(EXIT_USAGE);
     show_usage();
     e_exit(EXIT_USAGE);
 }

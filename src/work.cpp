@@ -69,7 +69,7 @@ void do_one_file(const char *iname, char *oname) {
 #endif
     if (r != 0) {
         if (errno == ENOENT)
-            throw FileNotFoundException(iname, errno);
+            UPX_THROW(FileNotFoundException(iname, errno));
         else
             throwIOException(iname, errno);
     }
@@ -277,9 +277,11 @@ int do_files(int i, int argc, char *argv[]) {
         char oname[ACC_FN_PATH_MAX + 1];
         oname[0] = 0;
 
-        try {
+        UPX_TRY {
             do_one_file(iname, oname);
-        } catch (const Exception &e) {
+        } 
+#ifndef UPX_NOEXCEPTION        
+        catch (const Exception &e) {
             unlink_ofile(oname);
             if (opt->verbose >= 1 || (opt->verbose >= 0 && !e.isWarning()))
                 printErr(iname, &e);
@@ -319,6 +321,9 @@ int do_files(int i, int argc, char *argv[]) {
             main_set_exit_code(EXIT_ERROR);
             return -1; // fatal error
         }
+#else
+    UNUSED(unlink_ofile);
+#endif // ifndef UPX_NOEXCEPTION
     }
 
     if (opt->cmd == CMD_COMPRESS)

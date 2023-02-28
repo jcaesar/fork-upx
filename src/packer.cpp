@@ -518,12 +518,12 @@ void Packer::handleStub(InputFile *fif, OutputFile *fo, unsigned size) {
 
 void Packer::checkOverlay(unsigned overlay) {
     if ((int) overlay < 0 || overlay > file_size_u)
-        throw OverlayException("invalid overlay size; file is possibly corrupt");
+        UPX_THROW(OverlayException("invalid overlay size; file is possibly corrupt"));
     if (overlay == 0)
         return;
     info("Found overlay: %d bytes", overlay);
     if (opt->overlay == opt->SKIP_OVERLAY)
-        throw OverlayException("file has overlay -- skipped; try '--overlay=copy'");
+        UPX_THROW(OverlayException("file has overlay -- skipped; try '--overlay=copy'"));
 }
 
 void Packer::copyOverlay(OutputFile *fo, unsigned overlay, MemBuffer &buf, bool do_seek) {

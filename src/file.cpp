@@ -172,9 +172,9 @@ void InputFile::sopen(const char *name, int flags, int shflags) {
     _length = 0;
     if (!super::do_sopen()) {
         if (errno == ENOENT)
-            throw FileNotFoundException(_name, errno);
+            UPX_THROW(FileNotFoundException(_name, errno));
         else if (errno == EEXIST)
-            throw FileAlreadyExistsException(_name, errno);
+            UPX_THROW(FileAlreadyExistsException(_name, errno));
         else
             throwIOException(_name, errno);
     }
@@ -226,11 +226,11 @@ void OutputFile::sopen(const char *name, int flags, int shflags, int mode) {
 #if 0
         // don't throw FileNotFound here -- this is confusing
         if (errno == ENOENT)
-            throw FileNotFoundException(_name,errno);
+            UPX_THROW(FileNotFoundException(_name,errno));
         else
 #endif
         if (errno == EEXIST)
-            throw FileAlreadyExistsException(_name, errno);
+            UPX_THROW(FileAlreadyExistsException(_name, errno));
         else
             throwIOException(_name, errno);
     }

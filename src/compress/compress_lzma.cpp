@@ -211,7 +211,6 @@ error:
 #undef _WIN32
 #undef _WIN32_WCE
 #undef COMPRESS_MF_MT
-#undef _NO_EXCEPTIONS
 #undef NULL
 #define NULL nullptr
 #include <lzma-sdk/C/Common/MyInitGuid.h>
@@ -357,7 +356,7 @@ int upx_lzma_compress(const upx_bytep src, unsigned src_len, upx_bytep dst, unsi
     assert(NCompress::NLZMA::FindMatchFinder(matchfinder) >= 0);
     pr[7].bstrVal = ACC_PCAST(BSTR, ACC_UNCONST_CAST(wchar_t *, matchfinder));
 
-    try {
+    UPX_TRY {
         if (enc.SetCoderProperties(propIDs, pr, nprops) != S_OK)
             goto error;
         // encode properties in LZMA-style (5 bytes)
@@ -380,7 +379,7 @@ int upx_lzma_compress(const upx_bytep src, unsigned src_len, upx_bytep dst, unsi
         // compress
         rh = enc.Code(&is, &os, nullptr, nullptr, &progress);
 
-    } catch (...) {
+    } UPX_CATCH(...) {
         rh = E_OUTOFMEMORY;
     }
 

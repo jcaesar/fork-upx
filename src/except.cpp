@@ -26,6 +26,7 @@
  */
 
 #include "conf.h"
+#include "except.h"
 
 /*************************************************************************
 //
@@ -73,11 +74,11 @@ Throwable::~Throwable() noexcept {
 void throwCantPack(const char *msg) {
     // UGLY, but makes things easier
     if (opt->cmd == CMD_COMPRESS)
-        throw CantPackException(msg);
+        UPX_THROW(CantPackException(msg));
     else if (opt->cmd == CMD_FILEINFO)
-        throw CantPackException(msg);
+        UPX_THROW(CantPackException(msg));
     else
-        throw CantUnpackException(msg);
+        UPX_THROW(CantUnpackException(msg));
 }
 
 void throwCantPackExact() { throwCantPack("option '--exact' does not work with this file"); }
@@ -85,12 +86,12 @@ void throwCantPackExact() { throwCantPack("option '--exact' does not work with t
 void throwFilterException() { throwCantPack("filter problem"); }
 
 void throwUnknownExecutableFormat(const char *msg, bool warn) {
-    throw UnknownExecutableFormatException(msg, warn);
+    UPX_THROW(UnknownExecutableFormatException(msg, warn));
 }
 
-void throwNotCompressible(const char *msg) { throw NotCompressibleException(msg); }
+void throwNotCompressible(const char *msg) { UPX_THROW(NotCompressibleException(msg)); }
 
-void throwAlreadyPacked(const char *msg) { throw AlreadyPackedException(msg); }
+void throwAlreadyPacked(const char *msg) { UPX_THROW(AlreadyPackedException(msg)); }
 
 void throwAlreadyPackedByUPX(const char *msg) {
     if (msg == nullptr)
@@ -110,33 +111,33 @@ void throwCantUnpack(const char *msg) {
 void throwNotPacked(const char *msg) {
     if (msg == nullptr)
         msg = "not packed by UPX";
-    throw NotPackedException(msg);
+    UPX_THROW(NotPackedException(msg));
 }
 
-void throwChecksumError() { throw Exception("checksum error"); }
+void throwChecksumError() { UPX_THROW(Exception("checksum error")); }
 
-void throwCompressedDataViolation() { throw Exception("compressed data violation"); }
+void throwCompressedDataViolation() { UPX_THROW(Exception("compressed data violation")); }
 
 /*************************************************************************
 // other
 **************************************************************************/
 
-void throwInternalError(const char *msg) { throw InternalError(msg); }
+void throwInternalError(const char *msg) { UPX_THROW(InternalError(msg)); }
 
 void throwBadLoader() { throwInternalError("bad loader"); }
 
 void throwOutOfMemoryException(const char *msg) {
     if (msg == nullptr)
         msg = "out of memory";
-    throw OutOfMemoryException(msg);
+    UPX_THROW(OutOfMemoryException(msg));
 }
 
-void throwIOException(const char *msg, int e) { throw IOException(msg, e); }
+void throwIOException(const char *msg, int e) { UPX_THROW(IOException(msg, e)); }
 
 void throwEOFException(const char *msg, int e) {
     if (msg == nullptr && e == 0)
         msg = "premature end of file";
-    throw EOFException(msg, e);
+    UPX_THROW(EOFException(msg, e));
 }
 
 /*************************************************************************

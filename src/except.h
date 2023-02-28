@@ -27,6 +27,21 @@
 
 #pragma once
 
+#if (defined(__cpp_exceptions) || defined(__EXCEPTIONS) || defined(_CPPUNWIND)) && !defined(UPX_NOEXCEPTION)
+    #define UPX_RETHROW throw
+    #define UPX_THROW(exception) throw exception
+    #define UPX_TRY try
+    #define UPX_CATCH(exception) catch(exception)
+#else
+    #include <cstdlib>
+    #include <iostream>
+    #define UPX_RETHROW
+    #define UPX_THROW(exception) do { auto _exhndex = (exception); std::cerr << "Aborting on exception: " << typeid(_exhndex).name() << ": " << _exhndex.getMsg() << std::endl; std::abort(); } while(false)
+    #define UPX_TRY if(true)
+    #define UPX_CATCH(exception) if(false)
+    #define UPX_NOEXCEPTION
+#endif
+
 const char *prettyName(const char *n) noexcept;
 
 /*************************************************************************

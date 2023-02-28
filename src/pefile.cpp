@@ -2921,7 +2921,7 @@ int PeFile::canUnpack0(unsigned max_sections, unsigned objs, unsigned ih_entry, 
         bool x = false;
 
         memset(buf, 0, sizeof(buf));
-        try {
+        UPX_TRY {
             fi->seek(ih_entry - isection[1].vaddr + isection[1].rawdataptr, SEEK_SET);
             fi->read(buf, sizeof(buf));
 
@@ -2932,7 +2932,7 @@ int PeFile::canUnpack0(unsigned max_sections, unsigned objs, unsigned ih_entry, 
             int offset = find(buf, sizeof(buf), magic, 7);
             if (offset >= 0 && find(buf + offset + 1, sizeof(buf) - offset - 1, magic, 7) >= 0)
                 x = true;
-        } catch (...) {
+        } UPX_CATCH (...) {
             // x = true;
         }
         if (x)
